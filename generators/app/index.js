@@ -13,7 +13,8 @@ module.exports = yeoman.Base.extend({
     var prompts = [{
       type    : 'input',
       name    : 'name',
-      message : 'Dipforge Docker Instance Name'
+      message : 'Dipforge Docker Instance Name',
+      default: 'dipforge'
     },{
       type    : 'input',
       name    : 'dipforgeVersion',
@@ -40,7 +41,8 @@ module.exports = yeoman.Base.extend({
       message : 'Enable recursive look ups ?',
       when: function(answers) {
         for (var answer in answers.enabledDaemons) {
-          if (answer == "DNS") {
+          var daemon = answers.enabledDaemons[answer]
+          if (daemon == "DNS") {
             return true;
           }
         }
@@ -61,6 +63,7 @@ module.exports = yeoman.Base.extend({
     }.bind(this));
   },
 
+  // this generator method is responsible for retrieving the files
   fetchFiles: function() {
     var thisRef = this
     var tokens = { dipforge_home: "/home/dipforge/dipforge", HOST_NAME: thisRef.props.hostname ,
@@ -68,70 +71,95 @@ module.exports = yeoman.Base.extend({
       recursive_lookup: (thisRef.props.recursiveLookup? "true" : "false")}
 
     var callback = function() {
-        // setup the templates
-        thisRef.fs.copyTpl (
-          thisRef.destinationPath(thisRef.props.name + '/dipforge-template/'),
-          thisRef.destinationPath(thisRef.props.name + '/dipforge/'),
-          tokens
-        );
+
     };
 
+    // download the template
     this.extract("https://github.com/brettchaldecott/dipforge/releases/download/" +
         this.props.dipforgeVersion + "/generator-dipforge-template-" + this.props.dipforgeVersion + ".zip",this.destinationPath(this.props.name + '/dipforge-template'),
         {extract: true},callback);
 
+    var dipforgeCallback = function() {
+      // this code assumes that  the template will be downloaded already due to its small size.
+      thisRef.fs.copyTpl (
+        thisRef.destinationPath(thisRef.props.name + '/dipforge-template/'),
+        thisRef.destinationPath(thisRef.props.name + '/dipforge/'),
+        tokens
+      );
+    }
+
+    this.extract("https://github.com/brettchaldecott/dipforge/releases/download/" +
+            this.props.dipforgeVersion + "/dipforge-template-" + this.props.dipforgeVersion + ".zip",this.destinationPath(this.props.name + '/dipforge'),
+            {extract: true},dipforgeCallback);
+
   },
 
-  writing: function () {
-    var tokens = {
-      name: this.props.name, dipforgeVersion: this.props.dipforgeVersion,
-      enableDNS: "#",
-      enableRDBUserManagment: "#",
-      enableEmailServer: "#",
-      enableDesktopServer: "#",
-      enableMasterRDFStore: "#",
-      enableRSSReader: "#",
-      enableTypeManager: "#",
-      enableRequestBroker: "#",
-      enableProjectManager: "#",
-      enableAuditTrailConsole: "#",
-      enableDipforgeAdmin: "#",
-      enableFileManager: "#"};
+  // this generator method is responsible for downloading the daemon jars
+  downloadDaemons: function() {
+    var archiveCallback = function(result) {
+    }
+
+    var archives = [
+      "0010-HsqlDBEngineDaemon-" + this.props.dipforgeVersion + ".jar",
+      "0040-MessageService-" + this.props.dipforgeVersion + ".jar",
+      "0040-ServiceBroker-" + this.props.dipforgeVersion + ".jar",
+      "0050-Timer-" + this.props.dipforgeVersion + ".jar",
+      "0060-Tomcat-" + this.props.dipforgeVersion + ".jar",
+      "0100-AuditTrailServer-" + this.props.dipforgeVersion + ".jar",
+      "0101-DeploymentDaemon-" + this.props.dipforgeVersion + ".jar",
+      "0140-GroovyDaemon-" + this.props.dipforgeVersion + ".jar",
+      "0160-DataMapperBroker-" + this.props.dipforgeVersion + ".jar",
+      "0170-ChangeManager-" + this.props.dipforgeVersion + ".jar",
+      "DipforgeEnvironment-" + this.props.dipforgeVersion + ".war",
+      "DipforgeEntryPoint-" + this.props.dipforgeVersion + ".war"]
 
     for (var answer in this.props.enabledDaemons) {
       var answerStr = this.props.enabledDaemons[answer]
       if (answerStr == "DNS") {
-        tokens['enableDNS'] = "";
+        archives.push("0005-DNSServer-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "RDBUserManagement") {
-        tokens['enableRDBUserManagment'] = "";
+        archives.push("0020-RDBUserManager-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "Email") {
-        tokens['enableEmailServer'] = "";
+        archives.push("0045-EmailServer-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "Desktop") {
-        tokens['enableDesktopServer'] = "";
+        archives.push("0050-DesktopServer-" + this.props.dipforgeVersion + ".jar")
+        archives.push("0050-EventServer-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "MasterRDF") {
-        tokens['enableMasterRDFStore'] = "";
+        archives.push("0057-MasterRDFStore-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "RSS") {
-        tokens['enableRSSReader'] = "";
+        archives.push("0102-RSSReader-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "TypeManager") {
-        tokens['enableTypeManager'] = "";
+        archives.push("0150-CoadunationTypeManager-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "RequestBroker") {
-        tokens['enableRequestBroker'] = "";
+        archives.push("0180-RequestBroker-" + this.props.dipforgeVersion + ".jar")
       } else if (answerStr == "ProjectManager") {
-        tokens['enableProjectManager'] = "";
+        archives.push("0200-ProjectManager-" + this.props.dipforgeVersion + ".jar")
       }
     }
 
     for (var answer in this.props.enabledWeb) {
-      var answerStr = this.props.enabledDaemons[answer]
+      var answerStr = this.props.enabledWeb[answer]
       if (answerStr == "AuditTrailConsole") {
-        tokens['enableAuditTrailConsole'] = "";
+        archives.push("AuditTrailConsole-" + this.props.dipforgeVersion + ".war")
       } else if (answerStr == "Admin") {
-        tokens['enableDipforgeAdmin'] = "";
+        archives.push("DipforgeAdmin-" + this.props.dipforgeVersion + ".war")
       } else if (answerStr == "FileManager") {
-        tokens['enableFileManager'] = "";
+        archives.push("FileManager-" + this.props.dipforgeVersion + ".war")
       }
     }
 
+
+    for (var archive in archives) {
+      var archiveName = archives[archive]
+      this.fetch("https://github.com/brettchaldecott/dipforge/releases/download/" +
+              this.props.dipforgeVersion + "/" +  archiveName,this.destinationPath(this.props.name + '/dipforge/deploy/'),
+              archiveCallback);
+    }
+  },
+
+  writing: function () {
+    var tokens = {
+      name: this.props.name, dipforgeVersion: this.props.dipforgeVersion};
 
     this.fs.copyTpl(
       this.templatePath('Dockerfile'),
