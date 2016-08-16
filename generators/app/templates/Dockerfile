@@ -10,7 +10,6 @@ RUN \
 
   # install open-jdk 8
   apt-get update && \
-  apt-get install -y apt-utils && \
   apt-get install -y openjdk-8-jdk && \
 
   # install utilities
