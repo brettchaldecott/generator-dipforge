@@ -1,4 +1,4 @@
-FROM ubuntu:xenial
+ FROM ubuntu:xenial
 MAINTAINER Brett Chaldecott <brett.chaldecott@gmail.com>
 
 RUN \
@@ -10,6 +10,7 @@ RUN \
 
   # install open-jdk 8
   apt-get update && \
+  apt-get install -y apt-utils && \
   apt-get install -y openjdk-8-jdk && \
 
   # install utilities
