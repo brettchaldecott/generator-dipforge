@@ -30,7 +30,7 @@ RUN \
   apt-get install -y npm nodejs-legacy && \
 
   # install yeoman bower gulp
-  npm install -g \
+  sudo npm install -g \
     yo \
     bower \
     gulp-cli && \
@@ -44,6 +44,9 @@ RUN \
 
 # add the dipforge template from the context directory
 ADD dipforge /home/dipforge/dipforge
+
+# copy sources
+#COPY . /home/jhipster/generator-jhipster
 
 # change the permissions for the dipforge directory
 RUN \
