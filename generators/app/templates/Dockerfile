@@ -27,16 +27,16 @@ RUN \
      build-essential && \
 
   # install node.js
-  apt-get install -y npm nodejs-legacy && \
+  apt-get install -y npm nodejs-legacy
 
   # install yeoman bower gulp
-  sudo npm install -g \
+RUN sudo npm install -g \
     yo \
     bower \
-    gulp-cli && \
+    gulp ; exit 0
 
   # cleanup
-  apt-get clean && \
+RUN apt-get clean && \
   rm -rf \
     /var/lib/apt/lists/* \
     /tmp/* \
