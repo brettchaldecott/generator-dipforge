@@ -30,7 +30,7 @@ RUN \
   apt-get install -y npm nodejs-legacy
 
   # install yeoman bower gulp
-RUN sudo npm install -g \
+RUN npm install -g \
     yo \
     bower \
     gulp ; exit 0
