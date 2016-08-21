@@ -110,7 +110,7 @@ module.exports = yeoman.Base.extend({
       "0140-GroovyDaemon-" + this.props.dipforgeVersion + ".jar",
       "0160-DataMapperBroker-" + this.props.dipforgeVersion + ".jar",
       "0170-ChangeManager-" + this.props.dipforgeVersion + ".jar",
-      "DipforgeEnvironment-" + this.props.dipforgeVersion + ".war",
+      "DipforgeEnvironment-" + this.props.dipforgeVersion + ".ear",
       "DipforgeEntryPoint-" + this.props.dipforgeVersion + ".war"]
 
     for (var answer in this.props.enabledDaemons) {
