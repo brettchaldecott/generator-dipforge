@@ -35,7 +35,7 @@ RUN npm install -g npm
 RUN npm install -g \
     yo \
     bower \
-    gulp ; exit 0
+    gulp-cli ; exit 0
 
   # cleanup
 RUN apt-get clean && \
