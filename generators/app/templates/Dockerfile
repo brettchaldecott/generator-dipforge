@@ -75,4 +75,4 @@ USER dipforge
 WORKDIR "/home/dipforge/dipforge"
 VOLUME ["/home/dipforge/dipforge"]
 EXPOSE 8080 2000 8083
-ENTRYPOINT ["/home/dipforge/dipforge/bin/run.sh"]
+ENTRYPOINT ["sudo","/home/dipforge/dipforge/bin/run.sh"]
