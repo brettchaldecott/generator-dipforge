@@ -24,7 +24,8 @@ RUN \
      fontconfig \
      python \
      g++ \
-     build-essential && \
+     build-essential \
+     sudo && \
 
   # install node.js
   apt-get install -y npm nodejs-legacy
@@ -53,7 +54,10 @@ ADD dipforge /home/dipforge/dipforge
 # change the permissions for the dipforge directory
 RUN \
   chown -R dipforge:dipforge \
-    /home/dipforge
+    /home/dipforge && \
+  sed -i.bkp -e \
+      's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
+      /etc/sudoers
 
 #RUN \
   # install jhipster
@@ -75,4 +79,4 @@ USER dipforge
 WORKDIR "/home/dipforge/dipforge"
 VOLUME ["/home/dipforge/dipforge"]
 EXPOSE 8080 2000 8083 53 25 143 110
-ENTRYPOINT ["sudo","/home/dipforge/dipforge/bin/run.sh"]
+ENTRYPOINT ["/usr/bin/sudo","/home/dipforge/dipforge/bin/run.sh"]
