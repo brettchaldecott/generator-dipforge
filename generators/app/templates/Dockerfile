@@ -77,6 +77,6 @@ RUN \
 # expose the working directory, the dipforge ports
 USER dipforge
 WORKDIR "/home/dipforge/dipforge"
-VOLUME ["/home/dipforge/dipforge"]
+#VOLUME ["/home/dipforge/dipforge"]
 EXPOSE 8080 2000 8083 53 25 143 110
 ENTRYPOINT ["/usr/bin/sudo","/home/dipforge/dipforge/bin/run.sh"]
