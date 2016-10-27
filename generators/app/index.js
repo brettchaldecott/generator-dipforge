@@ -286,7 +286,8 @@ module.exports = yeoman.Base.extend({
             if (zipUrl == undefined) {
                 continue;
             }
-            var target = this.destinationPath(this.props.name + "/dipforge/")
+            var zipName = zipUrl.substring(zipUrl.lastIndexOf("/"))
+            var target = this.destinationPath(this.props.name + "/" + zipName)
             zipContents += zipUrl + " " + target + "\n";
         }
         this.fs.write(this.destinationPath(this.props.name + "/zips"), zipContents);
