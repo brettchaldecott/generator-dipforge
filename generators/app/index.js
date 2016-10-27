@@ -116,9 +116,8 @@ module.exports = yeoman.Base.extend({
                     }]
 
                 this.prompt(prompts).then(function (props) {
-
-                    this.projects.push(props.projectName);
                     if (props.projectAdd) {
+                        this.projects.push(props.projectName);
                         askForProjects.call(this, done);
                     } else {
                         done();
@@ -155,9 +154,8 @@ module.exports = yeoman.Base.extend({
                     }]
 
                 this.prompt(prompts).then(function (props) {
-
-                    this.zipFiles.push(props.zipUrl);
-                    if (props.projectAdd) {
+                    if (props.zipAdd) {
+                        this.zipFiles.push(props.zipUrl);
                         askForZipFiles.call(this, done);
                     } else {
                         done();
@@ -288,9 +286,8 @@ module.exports = yeoman.Base.extend({
             if (zipUrl == undefined) {
                 continue;
             }
-            var zipName = zipUrl.substring(zipUrl.lastIndexOf("/"))
-            var target = this.destinationPath(this.props.name + "/" + zipName)
-            zipContents += zipName + " " + target + "\n";
+            var target = this.destinationPath(this.props.name + "/")
+            zipContents += zipUrl + " " + target + "\n";
         }
         this.fs.write(this.destinationPath(this.props.name + "/zips"), zipContents);
 
