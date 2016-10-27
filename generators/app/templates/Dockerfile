@@ -30,7 +30,6 @@ RUN \
   # install node.js
   apt-get install -y npm nodejs-legacy
 
-  # install yeoman bower gulp
 RUN npm install -g npm
 
 RUN npm install -g \
@@ -48,9 +47,6 @@ RUN apt-get clean && \
 # add the dipforge template from the context directory
 ADD dipforge /home/dipforge/dipforge
 
-# copy sources
-#COPY . /home/jhipster/generator-jhipster
-
 # change the permissions for the dipforge directory
 RUN \
   chown -R dipforge:dipforge \
@@ -59,24 +55,8 @@ RUN \
       's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
       /etc/sudoers
 
-#RUN \
-  # install jhipster
-#  npm install -g /home/jhipster/generator-jhipster && \
-
-  # fix jhipster user permissions
-  #chown -R jhipster:jhipster \
-  #  /home/jhipster \
-  #  /usr/lib/node_modules && \
-
-  # cleanup
-  #rm -rf \
-  #  /var/lib/apt/lists/* \
-  #  /tmp/* \
-  #  /var/tmp/*
-
 # expose the working directory, the dipforge ports
 USER dipforge
 WORKDIR "/home/dipforge/dipforge"
-#VOLUME ["/home/dipforge/dipforge"]
 EXPOSE 8080 2000 8083 53 25 143 110
 ENTRYPOINT ["/usr/bin/sudo","/home/dipforge/dipforge/bin/run.sh"]
