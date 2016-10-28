@@ -70,6 +70,11 @@ module.exports = yeoman.Base.extend({
                     name    : 'enabledWeb',
                     message : 'Pick the web extra consoles ?',
                     choices: ['AuditTrailConsole', 'Admin', 'FileManager'],
+                },{
+                    type    : 'confirm',
+                    name    : 'useSudo',
+                    message : 'Use sudo when executing docker command ?',
+                    default: false
                 }];
 
                 this.prompt(prompts).then(function (props) {
@@ -81,6 +86,7 @@ module.exports = yeoman.Base.extend({
                     this.enabledDaemons = props.enabledDaemons;
                     this.recursiveLookup = props.recursiveLookup;
                     this.enabledWeb = props.enabledWeb;
+					this.useSudo = props.useSudo;
                     this.props = props;
                     done();
                 }.bind(this));
@@ -295,6 +301,12 @@ module.exports = yeoman.Base.extend({
         // create the docker image file name
         this.fs.write(this.destinationPath(this.props.name + "/docker_image_name"), this.props.dockerImageName);
 
+        // setup the sudo file
+        if (this.props.useSudo) {
+            this.fs.write(this.destinationPath(this.props.name + "/sudo"), "sudo");
+        } else {
+            this.fs.write(this.destinationPath(this.props.name + "/sudo"), "");
+        }
     },
 
     writing: function () {

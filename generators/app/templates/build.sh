@@ -23,6 +23,7 @@ ZIP_FILE="${CURRENT_CONTEXT}/zips"
 DIPFORGE_DIRECTORY="${CURRENT_CONTEXT}/dipforge"
 REQUIRED_COMMANDS=("wget" "docker" "git" "unzip")
 DOCKER_IMAGE_NAME="${CURRENT_CONTEXT}/docker_image_name"
+SUDO_FILE="${CURRENT_CONTEXT}/sudo"
 
 
 # check for commands
@@ -148,7 +149,7 @@ function main {
     download_zip_files "${ZIP_FILE}"
 
     # create the docker image
-    docker build -t `cat ${DOCKER_IMAGE_NAME}` ${CURRENT_CONTEXT}
+    `cat ${SUDO_FILE}` docker build -t `cat ${DOCKER_IMAGE_NAME}` ${CURRENT_CONTEXT}
 }
 
 
