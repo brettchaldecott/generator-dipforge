@@ -326,6 +326,13 @@ module.exports = yeoman.Base.extend({
             this.spawnCommand("chmod",["a+x",this.destinationPath(this.props.name + '/build.sh')]);
         });
 
+        this.copy(
+            this.templatePath('dipforge.sh'),
+            this.destinationPath(this.props.name + '/dipforge/bin/dipforge.sh')
+        ).on('end',function() {
+            this.spawnCommand("chmod",["a+x",this.destinationPath(this.props.name + '/dipforge/bin/dipforge.sh')]);
+        });
+
     }
 });
 
