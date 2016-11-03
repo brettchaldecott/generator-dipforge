@@ -264,7 +264,7 @@ module.exports = yeoman.Base.extend({
             var archiveName = archives[archive]
             var url = "https://github.com/brettchaldecott/dipforge/releases/download/" +
                 this.props.dipforgeVersion + "/" +  archiveName;
-            var target = this.destinationPath(this.props.name + '/dipforge/deploy/' + archiveName);
+            var target = './dipforge/deploy/' + archiveName;
             fileContents += url + " " + target + "\n";
             //this.fetch("https://github.com/brettchaldecott/dipforge/releases/download/" +
             //      this.props.dipforgeVersion + "/" +  archiveName,this.destinationPath(this.props.name + '/dipforge/deploy/'),
@@ -280,7 +280,7 @@ module.exports = yeoman.Base.extend({
                 continue;
             }
             var projectName = project.substring(project.lastIndexOf("/"),project.lastIndexOf("."))
-            var target = this.destinationPath(this.props.name + "/dipforge/var/projects/" + projectName)
+            var target = "./dipforge/var/projects/" + projectName;
             projectsContents += project + " " + target + "\n";
         }
         this.fs.write(this.destinationPath(this.props.name + "/projects"), projectsContents);
@@ -293,7 +293,7 @@ module.exports = yeoman.Base.extend({
                 continue;
             }
             var zipName = zipUrl.substring(zipUrl.lastIndexOf("/"))
-            var target = this.destinationPath(this.props.name + "/" + zipName)
+            var target = "./" + zipName;
             zipContents += zipUrl + " " + target + "\n";
         }
         this.fs.write(this.destinationPath(this.props.name + "/zips"), zipContents);
