@@ -68,7 +68,7 @@ function download_file {
     fi
 
     echo "Download ${url}"
-    curl -o ${target} ${url}
+    curl -o ${target} -L ${url}
 }
 
 function download_files {
