@@ -21,7 +21,7 @@ DOWNLOAD_FILE="${CURRENT_CONTEXT}/downloads"
 PROJECTS_FILE="${CURRENT_CONTEXT}/projects"
 ZIP_FILE="${CURRENT_CONTEXT}/zips"
 DIPFORGE_DIRECTORY="${CURRENT_CONTEXT}/dipforge"
-REQUIRED_COMMANDS=("wget" "docker" "git" "unzip")
+REQUIRED_COMMANDS=("curl" "docker" "git" "unzip")
 DOCKER_IMAGE_NAME="${CURRENT_CONTEXT}/docker_image_name"
 SUDO_FILE="${CURRENT_CONTEXT}/sudo"
 
@@ -68,7 +68,7 @@ function download_file {
     fi
 
     echo "Download ${url}"
-    wget ${url} -O ${target}
+    curl -o ${target} ${url}
 }
 
 function download_files {
