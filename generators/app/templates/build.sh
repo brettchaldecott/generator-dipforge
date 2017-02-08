@@ -95,8 +95,12 @@ function download_git_project {
     local url=$1
     local target_directory=$2
 
-    git clone ${url} ${target_directory}
-
+	# clone a directory and update it if it exists
+    if [ -f ${target_directory} ] ; then
+    	cd ${target_directory} && git pull origin master ; cd -
+	else
+    	git clone ${url} ${target_directory}
+    fi
 }
 
 function download_git_projects {

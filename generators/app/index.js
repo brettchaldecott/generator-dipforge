@@ -30,7 +30,7 @@ module.exports = yeoman.Base.extend({
                     type    : 'input',
                     name    : 'dipforgeVersion',
                     message : 'Dipforge Version',
-                    default : '4.1.a5'
+                    default : '4.1.a6'
                 },{
                     type    : 'input',
                     name    : 'dockerImageName',
