@@ -73,4 +73,9 @@ fi
 
 # run
 echo $JAVA $JAVA_OPTS -jar `ls $DIPFORGE_HOME/sbin/CoadunationBase-*.jar`
-$JAVA $JAVA_OPTS -jar `ls $DIPFORGE_HOME/sbin/CoadunationBase-*.jar`
+$JAVA $JAVA_OPTS -jar `ls $DIPFORGE_HOME/sbin/CoadunationBase-*.jar` &
+DIPFORGE_PID=$!
+sleep 30
+chmod a+x ${DIPFORGE_HOME}/bin/register_projects.sh
+${DIPFORGE_HOME}/bin/register_projects.sh
+wait ${DIPFORGE_PID}

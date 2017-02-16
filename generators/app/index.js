@@ -9,6 +9,7 @@ module.exports = yeoman.Base.extend({
         setupVars: function () {
             this.projects = [];
             this.zipFiles = [];
+            this.publishProjects = [];
         }
     },
     prompting: {
@@ -118,7 +119,7 @@ module.exports = yeoman.Base.extend({
                             }
                             return true;
                         },
-                        message: 'What is the name of your project?'
+                        message: 'What is the git project url ?'
                     }]
 
                 this.prompt(prompts).then(function (props) {
@@ -169,7 +170,46 @@ module.exports = yeoman.Base.extend({
                 }.bind(this));
             }
             askForZipFiles.call(this, done);
+        },
+        getPublishProjects: function() {
+            var done = this.async();
+            function askForPublishProjects(done) {
+                this.log(chalk.green('\nPublish Projects #' + (this.publishProjects.length + 1) + '\n'));
+
+                var prompts = [
+                    {
+                        type: 'confirm',
+                        name: 'publishProjectAdd',
+                        message: 'Do want to want to publish projects ?',
+                        default: true
+                    },
+                    {
+                        when: function (response) {
+                            return response.publishProjectAdd === true;
+                        },
+                        type: 'input',
+                        name: 'projectName',
+                        validate: function (input) {
+                            if (input === '') {
+                                return 'Your project name cannot be empty';
+                            }
+                            return true;
+                        },
+                        message: 'What is the project name to publish ?'
+                    }]
+
+                this.prompt(prompts).then(function (props) {
+                    if (props.publishProjectAdd) {
+                        this.publishProjects.push(props.projectName);
+                        askForPublishProjects.call(this, done);
+                    } else {
+                        done();
+                    }
+                }.bind(this));
+            }
+            askForPublishProjects.call(this, done);
         }
+
     },
 
     // this generator method is responsible for retrieving the files
@@ -298,6 +338,17 @@ module.exports = yeoman.Base.extend({
         }
         this.fs.write(this.destinationPath(this.props.name + "/zips"), zipContents);
 
+        // build the zip apply contents
+        var publishProjectsContents = "";
+        for (var index in this.publishProjects) {
+            var publishProject = this.publishProjects[index]
+            if (publishProject == undefined) {
+                continue;
+            }
+            publishProjectsContents += publishProject +  "\n";
+        }
+        this.fs.write(this.destinationPath(this.props.name + "/dipforge/bin/publish_projects"), publishProjectsContents);
+
         // create the docker image file name
         this.fs.write(this.destinationPath(this.props.name + "/docker_image_name"), this.props.dockerImageName);
 
@@ -311,7 +362,8 @@ module.exports = yeoman.Base.extend({
 
     writing: function () {
         var tokens = {
-            name: this.props.name, dipforgeVersion: this.props.dipforgeVersion};
+            name: this.props.name, dipforgeVersion: this.props.dipforgeVersion,
+            adminPassword: this.props.adminPassword};
 
         this.fs.copyTpl(
             this.templatePath('Dockerfile'),
@@ -332,6 +384,17 @@ module.exports = yeoman.Base.extend({
         ).on('end',function() {
             this.spawnCommand("chmod",["a+x",this.destinationPath(this.props.name + '/dipforge/bin/dipforge.sh')]);
         });
+
+        this.fs.copyTpl(
+            this.templatePath('register_projects.sh'),
+            this.destinationPath(this.props.name + '/dipforge/bin/register_projects.sh'),
+            tokens
+        );
+
+        this.copy(
+            this.templatePath('Jenkinsfile'),
+            this.destinationPath(this.props.name + '/Jenkinsfile')
+        );
 
     }
 });

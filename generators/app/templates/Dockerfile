@@ -4,6 +4,7 @@ MAINTAINER Brett Chaldecott <brett.chaldecott@gmail.com>
 # run command
 RUN \
   apk add --update bash && \
+  apk add --update curl && \
   rm -rf /var/cache/apk/* && \
   mkdir -p /home/dipforge/dipforge 
 

@@ -1,0 +1,20 @@
+node {
+    stage('checkout') {
+        checkout scm
+    }
+
+    stage('clean') {
+    }
+
+    stage('backend tests') {
+    }
+
+    stage('packaging') {
+        sh "./build.sh"
+    }
+
+    stage('docker registy') {
+        sh "docker tag `cat ./docker_image_name` ${RegistryName}/`cat ./docker_image_name`"
+            sh "docker push ${RegistryName}/`cat ./docker_image_name`"
+    }
+}
