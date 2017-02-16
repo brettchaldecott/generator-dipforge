@@ -131,7 +131,7 @@ function download_zip_files {
     while read -r -u 10 line; do
         local file_info=(${line})
         download_file ${file_info[@]}
-        unzip ${file_info[1]} -d ${DIPFORGE_DIRECTORY}
+        unzip -o ${file_info[1]} -d ${DIPFORGE_DIRECTORY}
     done 10<${config_file};
 
 }
