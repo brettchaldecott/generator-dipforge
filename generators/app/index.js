@@ -31,7 +31,7 @@ module.exports = yeoman.Base.extend({
                     type    : 'input',
                     name    : 'dipforgeVersion',
                     message : 'Dipforge Version',
-                    default : '4.1.a6'
+                    default : '4.1.a18'
                 },{
                     type    : 'input',
                     name    : 'dockerImageName',
@@ -224,7 +224,7 @@ module.exports = yeoman.Base.extend({
         };
 
         // download the template
-        this.extract("https://github.com/brettchaldecott/dipforge/releases/download/" +
+        this.extract("https://s3-eu-west-1.amazonaws.com/dipforge/" +
             this.props.dipforgeVersion + "/generator-dipforge-template-" + this.props.dipforgeVersion + ".zip",this.destinationPath(this.props.name + '/dipforge-template'),
             {extract: true},callback);
 
@@ -237,7 +237,7 @@ module.exports = yeoman.Base.extend({
             );
         }
 
-        this.extract("https://github.com/brettchaldecott/dipforge/releases/download/" +
+        this.extract("https://s3-eu-west-1.amazonaws.com/dipforge/" +
             this.props.dipforgeVersion + "/dipforge-template-" + this.props.dipforgeVersion + ".zip",this.destinationPath(this.props.name + '/dipforge'),
             {extract: true},dipforgeCallback);
 
@@ -302,7 +302,7 @@ module.exports = yeoman.Base.extend({
         var fileContents = "";
         for (var archive in archives) {
             var archiveName = archives[archive]
-            var url = "https://github.com/brettchaldecott/dipforge/releases/download/" +
+            var url = "https://s3-eu-west-1.amazonaws.com/dipforge/" +
                 this.props.dipforgeVersion + "/" +  archiveName;
             var target = './dipforge/deploy/' + archiveName;
             fileContents += url + " " + target + "\n";
